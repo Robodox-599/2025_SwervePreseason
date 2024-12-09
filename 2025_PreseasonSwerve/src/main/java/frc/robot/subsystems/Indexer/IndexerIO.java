@@ -3,6 +3,7 @@ package frc.robot.subsystems.Indexer;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface IndexerIO {
+    
     @AutoLog
     public static class IndexerIOInputs {
         public double velocityRadsPerSec = 0.0;

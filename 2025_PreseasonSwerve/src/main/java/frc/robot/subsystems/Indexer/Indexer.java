@@ -1,11 +1,13 @@
 package frc.robot.subsystems.Indexer;
 
-import java.lang.System.Logger;
+
+import java.util.logging.Logger;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Indexer.IndexerIO.IndexerIOInputs;
 
 public class Indexer extends SubsystemBase {
     private final IndexerIO io;

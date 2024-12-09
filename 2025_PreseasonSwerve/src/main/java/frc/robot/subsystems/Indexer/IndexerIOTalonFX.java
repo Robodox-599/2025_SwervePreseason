@@ -2,13 +2,6 @@ package frc.robot.subsystems.Indexer;
 
 import static frc.robot.subsystems.Indexer.IndexerConstants.*;
 
-import static frc.robot.subsystems.Indexer.IndexerConstants.ContinousCurrentLimit;
-import static frc.robot.subsystems.Indexer.IndexerConstants.EnableCurrentLimit;
-import static frc.robot.subsystems.Indexer.IndexerConstants.PeakCurrentDuration;
-import static frc.robot.subsystems.Indexer.IndexerConstants.PeakCurrentLimit;
-import static frc.robot.subsystems.Indexer.IndexerConstants.indexerMotorCANBus;
-import static frc.robot.subsystems.Indexer.IndexerConstants.indexerMotorID;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -18,16 +11,20 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
 
 public class IndexerIOTalonFX implements IndexerIO {
     private TalonFX indexerMotor;
     TalonFXConfiguration indexerConfig;
 
-    private final StatusSignal<Double> velocityRadsPerSec;
-    private final StatusSignal<Double> appliedVoltage;
+    private final StatusSignal<AngularVelocity> velocityRadsPerSec;
+    private final StatusSignal<Voltage> appliedVoltage;
     private double desiredSpeedSetpoint;
-    private final StatusSignal<Double> currentAmps;
-    private final StatusSignal<Double> tempCelcius;
+    private final StatusSignal<Current> currentAmps;
+    private final StatusSignal<Temperature> tempCelcius;
     private final PositionVoltage indexerPositionVoltage = new PositionVoltage(0). withSlot(0);
     private final VelocityVoltage indexerVelocityVoltage = new VelocityVoltage(0). withSlot(0);
 
@@ -41,12 +38,12 @@ public class IndexerIOTalonFX implements IndexerIO {
         indexerConfig.Slot0.kP = realkV;
         indexerConfig.CurrentLimits.SupplyCurrentLimitEnable = EnableCurrentLimit;
         indexerConfig.CurrentLimits.SupplyCurrentLimit = ContinousCurrentLimit;
-        indexerConfig.CurrentLimits.SupplyCurrentThreshold = PeakCurrentLimit;
-        indexerConfig.CurrentLimits.SupplyTimeThreshold = PeakCurrentDuration;
+        indexerConfig.CurrentLimits.SupplyCurrentLowerLimit = PeakCurrentLimit;
+        indexerConfig.CurrentLimits.SupplyCurrentLowerTime = PeakCurrentDuration;
 
         appliedVoltage = indexerMotor.getSupplyVoltage();
         velocityRadsPerSec = indexerMotor.getVelocity();
-        tempCelcius = indexerConfig.getDeviceTemp();
+        tempCelcius = indexerMotor.getDeviceTemp();
         currentAmps = indexerMotor.getSupplyCurrent();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
