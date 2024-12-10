@@ -134,7 +134,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         // Configure CANCoder
         CANcoderConfiguration cancoderConfig = constants.CANcoderInitialConfigs;
         cancoderConfig.MagnetSensor.MagnetOffset = constants.CANcoderOffset;
-        cancoderConfig.MagnetSensor.SensorDirection = constants.CANcoderInverted
+        cancoderConfig.MagnetSensor.SensorDirection = constants.k
                 ? SensorDirectionValue.Clockwise_Positive
                 : SensorDirectionValue.CounterClockwise_Positive;
         cancoder.getConfigurator().apply(cancoderConfig);
