@@ -8,17 +8,22 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
+
 import static frc.robot.subsystems.intake.rollers.RollersConstants.*;
 
 public class RollersIOTalonFX implements RollersIO {
     private TalonFX rollerMotor;
     TalonFXConfiguration rollerConfig;
 
-    private final StatusSignal<Double> appliedVoltage;
-    private final StatusSignal<Double> velocityRadsPerSec;
+    private final StatusSignal<Voltage> appliedVoltage;
+    private final StatusSignal<AngularVelocity> velocityRadsPerSec;
     private double desiredVelocitySetpoint;
-    private final StatusSignal<Double> tempCelcius;
-    private final StatusSignal<Double> currentAmps;
+    private final StatusSignal<Temperature> tempCelcius;
+    private final StatusSignal<Current> currentAmps;
     
     private final VelocityVoltage rollerVelocityVoltage = new VelocityVoltage(0).withSlot(1);
 

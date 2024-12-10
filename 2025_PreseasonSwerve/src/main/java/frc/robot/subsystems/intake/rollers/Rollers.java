@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class Rollers  extends SubsystemBase {
+public class Rollers extends SubsystemBase {
     private final RollersIO io;
     RollersIOInputsAutoLogged inputs = new RollersIOInputsAutoLogged();
 
