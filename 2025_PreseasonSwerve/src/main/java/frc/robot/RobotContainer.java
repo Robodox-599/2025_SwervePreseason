@@ -13,6 +13,10 @@
 
 package frc.robot;
 
+import choreo.Choreo;
+import choreo.auto.AutoChooser;
+import choreo.auto.AutoFactory;
+import choreo.auto.AutoFactory.AutoBindings;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,7 +26,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -31,13 +34,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
-import choreo.Choreo;
-import choreo.auto.AutoChooser;
-import choreo.auto.AutoFactory;
-import choreo.auto.AutoChooser.AutoRoutineGenerator;
-import choreo.auto.AutoFactory.AutoBindings;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -59,14 +55,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    autoRoutines = new AutoRoutines(drive);
-    autoFactory = Choreo.createAutoFactory(
-            drive, // The drive subsystem
-            drive::getPose, // A function that returns the current robot pose
-            drive::followChoreoPath, // The controller for the drive subsystem
-            this::isRedAlliance, // A function that returns true if the robot is on the red alliance
-            new AutoBindings() // An empty object, should be used to bind event markers in trajectories made by autofactory to commands
-            );
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -77,9 +65,15 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-
+        autoRoutines = new AutoRoutines(drive);
+        autoFactory = Choreo.createAutoFactory(
+            drive, // The drive subsystem
+            drive::getPose, // A function that returns the current robot pose
+            drive::followChoreoPath, // The controller for the drive subsystem
+            this::isRedAlliance, // A function that returns true if the robot is on the red alliance
+            new AutoBindings() // An empty object, should be used to bind event markers in trajectories made by autofactory to commands
+            );
         break;
-
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive =
@@ -89,6 +83,14 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        autoRoutines = new AutoRoutines(drive);
+        autoFactory = Choreo.createAutoFactory(
+            drive, // The drive subsystem
+            drive::getPose, // A function that returns the current robot pose
+            drive::followChoreoPath, // The controller for the drive subsystem
+            this::isRedAlliance, // A function that returns true if the robot is on the red alliance
+            new AutoBindings() // An empty object, should be used to bind event markers in trajectories made by autofactory to commands
+            );
         break;
 
       default:
@@ -100,28 +102,20 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        autoRoutines = new AutoRoutines(drive);
+        autoFactory = Choreo.createAutoFactory(
+            drive, // The drive subsystem
+            drive::getPose, // A function that returns the current robot pose
+            drive::followChoreoPath, // The controller for the drive subsystem
+            this::isRedAlliance, // A function that returns true if the robot is on the red alliance
+            new AutoBindings() // An empty object, should be used to bind event markers in trajectories made by autofactory to commands
+            );
         break;
     }
 
     // Set up auto routines
     autoChooser = new AutoChooser(autoFactory, "");
     autoChooser.addAutoRoutine("SimplePath", autoRoutines::simplePathAuto);
-
-    // // Set up SysId routines
-    // autoChooser.addOption(
-    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    // autoChooser.addOption(
-    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    // autoChooser.addOption(
-    //     "Drive SysId (Quasistatic Forward)",
-    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    // autoChooser.addOption(
-    //     "Drive SysId (Quasistatic Reverse)",
-    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    // autoChooser.addOption(
-    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    // autoChooser.addOption(
-    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -173,7 +167,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return autoChooser.getSelectedAutoRoutine();
   }
   private boolean isRedAlliance() {
     return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red);
