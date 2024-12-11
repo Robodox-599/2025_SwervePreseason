@@ -1,6 +1,8 @@
 package frc.robot.subsystems.leds;
 
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.leds.LEDsConstants.LEDAnim;
@@ -14,6 +16,7 @@ public class LEDs extends SubsystemBase {
     }
     public void periodic() {
         io.updateInputs(inputs);
+        Logger.processInputs("LEDs", inputs);
     }
 
     public Command runAnim(LEDAnim anim){
