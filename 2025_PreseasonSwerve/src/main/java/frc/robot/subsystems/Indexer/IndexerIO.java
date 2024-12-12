@@ -27,4 +27,5 @@ public interface IndexerIO {
     public default boolean noteInIndexer() {
         return false;
     }
+    public default void runVelocity(double velocity) {}
 }
