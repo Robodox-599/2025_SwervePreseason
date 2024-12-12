@@ -52,5 +52,11 @@ public class IndexerIOSim implements IndexerIO {
     public void setVelocity(double velocity) {
         double volts = controller.calculate(indexerMotorSim.getAngularVelocityRadPerSec(), velocity);
     }
+    @Override
+    public void beamBreakPeriodic() {}
 
+    @Override
+    public boolean noteInIndexer() {
+        return false;
+    }
 }

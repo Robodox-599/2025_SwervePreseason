@@ -5,7 +5,9 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.AutoLogOutput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Indexer.IndexerIO.IndexerIOInputs;
 
 public class Indexer extends SubsystemBase {
@@ -20,6 +22,8 @@ public class Indexer extends SubsystemBase {
     io.updateInputs(inputs);
 
     Logger.processInputs("Indexer", inputs);
+
+    io.beamBreakPeriodic();
   }
 
   @AutoLogOutput(key = "Indexer/IndexerAppliedVoltage")
@@ -57,4 +61,10 @@ public class Indexer extends SubsystemBase {
   public void setBrake(boolean brake){
     io.setBrake(brake);
   }
+  Public Command indexerTillBeamBreak(){
+	return Commands.sequential(
+	new InstantCommand(()-> io.runVelocity(IndexerConstants.intakeVelocity)),
+	new WaitUntilCommand(()-> io.noteInIndexer()),
+	new InstantCommand(() -> io.runVelocity(0)));
+
 }

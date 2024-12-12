@@ -15,6 +15,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 
 public class IndexerIOTalonFX implements IndexerIO {
     private TalonFX indexerMotor;
@@ -28,6 +30,9 @@ public class IndexerIOTalonFX implements IndexerIO {
     private final PositionVoltage indexerPositionVoltage = new PositionVoltage(0). withSlot(0);
     private final VelocityVoltage indexerVelocityVoltage = new VelocityVoltage(0). withSlot(0);
 
+    DigitalInput beamBreak = new DigitalInput(beamBreakPort);
+    Timer beamBreakTimer = new Timer();
+    
     public IndexerIOTalonFX() {
         indexerMotor = new TalonFX(indexerMotorID, indexerMotorCANBus);
         indexerConfig = new TalonFXConfiguration();
@@ -51,6 +56,8 @@ public class IndexerIOTalonFX implements IndexerIO {
 
         indexerMotor.optimizeBusUtilization();
         indexerMotor.getConfigurator().apply(indexerConfig);
+
+        beamBreakTimer.start();
     }
 
     @Override
@@ -80,9 +87,22 @@ public class IndexerIOTalonFX implements IndexerIO {
 
     @Override
     public void goToPose(double pose) {
-        indexerMotor.setControl(indexerPositionVoltage.withPosition(Units.radiansToRotations    (pose)));
+        indexerMotor.setControl(indexerPositionVoltage.withPosition(Units.radiansToRotations(pose)));
     }
     public void setVelocity(double velocity) {
         indexerMotor.setControl(indexerVelocityVoltage.withVelocity(Units.radiansPerSecondToRotationsPerMinute(velocity)/60));
     }
+
+    @Override
+    public boolean noteInIndexer() {
+        return beamBreakTimer.get()>=IndexerConstants.beamBreakDebounce;   
+    }
+
+    @Override 
+    public void beamBreakPeriodic() {
+        if(beamBreak.get()){
+            beamBreakTimer.restart();
+        }
+    }
+
 }

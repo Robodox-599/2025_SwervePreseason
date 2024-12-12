@@ -25,5 +25,9 @@ public class IndexerConstants {
 
     public static final double simVelocityConstant = 0.2;
 
+    public static final int beamBreakPort = 1;
+    public static final double beamBreakDebounce = 0.05;
+    public static final double intakeVelocity = 20;
+
 
 }
