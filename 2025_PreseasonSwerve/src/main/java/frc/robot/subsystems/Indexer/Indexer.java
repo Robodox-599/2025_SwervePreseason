@@ -61,10 +61,10 @@ public class Indexer extends SubsystemBase {
   public void setBrake(boolean brake){
     io.setBrake(brake);
   }
-  Public Command indexerTillBeamBreak(){
-	return Commands.sequential(
+  public Command indexerTillBeamBreak(){
+	return Commands.sequence(
 	new InstantCommand(()-> io.runVelocity(IndexerConstants.intakeVelocity)),
 	new WaitUntilCommand(()-> io.noteInIndexer()),
 	new InstantCommand(() -> io.runVelocity(0)));
-
+}
 }
