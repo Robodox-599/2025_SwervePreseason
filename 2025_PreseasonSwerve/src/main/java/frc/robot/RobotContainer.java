@@ -116,7 +116,7 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new AutoChooser(autoFactory, "");
     autoChooser.addAutoRoutine("SimplePath", autoRoutines::simplePathAuto);
-
+    
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -171,5 +171,10 @@ public class RobotContainer {
   }
   private boolean isRedAlliance() {
     return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red);
+  }
+
+
+  public void updateAutoChooser(){
+    autoChooser.update();
   }
 }
