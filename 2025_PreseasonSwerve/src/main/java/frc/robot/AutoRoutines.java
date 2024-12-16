@@ -13,6 +13,22 @@ public class AutoRoutines {
         this.drive = drive;
     }
 
+    public Command twoNoteAuto(AutoFactory factory) {
+        final AutoLoop routine = factory.newLoop("TwoNotePath Auto");
+        final AutoTrajectory twoNotePath = factory.trajectory("TwoNotePath", routine);
+
+        routine.enabled().onTrue(
+            drive.runOnce(() ->
+                twoNotePath.getInitialPose().ifPresentOrElse(
+                    pose -> drive.setPose(pose),
+                    routine::kill
+                )
+            )
+            .andThen(twoNotePath.cmd())
+        );
+        return routine.cmd();
+    }
+
     public Command simplePathAuto(AutoFactory factory) {
         final AutoLoop routine = factory.newLoop("SimplePath Auto");
         final AutoTrajectory simplePath = factory.trajectory("SimplePath", routine);
