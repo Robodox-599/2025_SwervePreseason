@@ -86,6 +86,8 @@ public class Drive extends SubsystemBase {
   private final PIDController choreoPathYController = new PIDController(10, 0, 0);
   private final PIDController choreoPathAngleController = new PIDController(7, 0, 0);
 
+
+
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
@@ -114,8 +116,9 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+    choreoPathAngleController.enableContinuousInput(-Math.PI, Math.PI);
 
-  
+        
   }
 
   @Override
@@ -203,7 +206,8 @@ public class Drive extends SubsystemBase {
 
 
 public void followChoreoPath(Pose2d pose, SwerveSample sample){
-  choreoPathAngleController.enableContinuousInput(-Math.PI, Math.PI);
+  Logger.recordOutput("Choreo/Pose2d", pose);
+  Logger.recordOutput("Choreo/SwerveSample", sample);
 
   var pathTargetSpeeds = sample.getChassisSpeeds();
   pathTargetSpeeds.vxMetersPerSecond += choreoPathXController.calculate(pose.getX(), sample.x );
