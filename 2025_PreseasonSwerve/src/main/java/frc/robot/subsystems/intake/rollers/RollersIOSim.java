@@ -2,13 +2,12 @@ package frc.robot.subsystems.intake.rollers;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import static frc.robot.subsystems.intake.rollers.RollersConstants.*;
 
-public class RollersIOSim implements RollersIO {
+public class RollersIOSim implements RollersIO{
     private final DCMotor rollerGearbox = DCMotor.getKrakenX60Foc(1);
     private PIDController controller = new PIDController(1, 0, 0);
     private SimpleMotorFeedforward ff;
