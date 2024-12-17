@@ -116,7 +116,7 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new AutoChooser(autoFactory, "");
     autoChooser.addAutoRoutine("SimplePath", autoRoutines::simplePathAuto);
-    
+    autoChooser.addAutoRoutine("TwoNotePath Auto", autoRoutines::twoNoteAuto);
     // Configure the button bindings
     configureButtonBindings();
   }
